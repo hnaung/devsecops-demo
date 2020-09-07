@@ -1,8 +1,4 @@
 pipeline {
-  environment {
-    registry = "hnaung/docker-test"
-    registryCredential = ‘dockerhub_id’
-  }
   agent any
   stages {
     stage('Cloning Git') {
