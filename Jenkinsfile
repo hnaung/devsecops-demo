@@ -1,4 +1,9 @@
 pipeline {
+  environment {
+    registry = "hnaung/nodejs-app"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+  }
   agent any
   stages {
     stage('Cloning Git') {
@@ -9,8 +14,22 @@ pipeline {
     stage('Building image') {
       steps{
         script {
-          docker.build registry + ":$BUILD_NUMBER"
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
         }
+      }
+    }
+    stage('Push') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+    stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $registry:$BUILD_NUMBER"
       }
     }
   }
