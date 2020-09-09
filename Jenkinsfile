@@ -28,7 +28,7 @@ pipeline {
     }
     stage('Docker Remove Image') {
       steps {
-        sh "docker rmi hnaung/web-api-demo:${env.BUILD_NUMBER}"
+        sh "docker rmi "$registry:$BUILD_NUMBER"
       }
     }
 post {
