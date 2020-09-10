@@ -1,4 +1,8 @@
-node {
+pipeline {
+  agent any
+ 
+  tools {nodejs "node"}
+  // node {
     
 	
     def newApp
