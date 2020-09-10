@@ -1,47 +1,46 @@
-//Jenkins file only to tutorial example
 pipeline {
+  environment {
+    registry = "hnaung/node-app"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+  }
   agent any
-    
-  tools {nodejs "node"}
-    
+  tools {nodejs "node" }
   stages {
-        
     stage('Cloning Git') {
       steps {
-        git 'https://github.com/hnaung/devsecops-demo.git'
+        git 'https://github.com/hnaung/devsecops-demo'
       }
     }
-        
-    stage('Install dependencies') {
-      steps {
-        sh 'npm install'
-      }
+    stage('Build') {
+       steps {
+         sh 'npm install'
+       }
     }
-     
     stage('Test') {
       steps {
-         sh 'npm test'
-      }
-    }      
-
-    stage('Building Image') {
-        docker.withRegistry( 'https://' + registry, registryCredential ) {
-		    def buildName = registry + ":$BUILD_NUMBER"
-			newApp = docker.build buildName
-			newApp.push()
+        sh 'npm test'
       }
     }
-
-	stage('Registring image') {
-        docker.withRegistry( 'https://' + registry, registryCredential ) {
-    		newApp.push 'latest2'
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
       }
     }
-	
-    stage('Removing image') {
+    stage('Deploy Image') {
+      steps{
+         script {
+            docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+    stage('Remove Unused docker image') {
+      steps{
         sh "docker rmi $registry:$BUILD_NUMBER"
-        sh "docker rmi $registry:latest"
       }
     }
   }
-}
