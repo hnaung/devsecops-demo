@@ -12,16 +12,16 @@ pipeline {
         git 'https://github.com/hnaung/devsecops-demo'
       }
     }
-    stage('Build') {
-       steps {
-         sh 'npm install'
-       }
-    }
-    stage('Test') {
-      steps {
-        sh 'npm test'
-      }
-    }
+//    stage('Build') {
+//       steps {
+//        sh 'npm install'
+//       }
+//    }
+//    stage('Test') {
+//      steps {
+//        sh 'npm test'
+//      }
+//    }
     stage('Building image') {
       steps{
         script {
@@ -29,7 +29,15 @@ pipeline {
         }
       }
     }
-    stage('Deploy Image') {
+
+    stage('Analyze with Anchore plugin') {
+      steps {
+        writeFile file: 'anchore_images', text: imageLine
+        anchore name: 'anchore_images'
+      }
+    }
+
+    stage('Publish Image') {
       steps{
          script {
             docker.withRegistry( '', registryCredential ) {
