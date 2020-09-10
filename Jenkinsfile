@@ -1,41 +1,34 @@
-pipeline {
-  environment {
-    registry = "hnaung/nodejs-app"
-    registryCredential = 'dockerhub'
-    dockerImage = ''
-  }
-  agent any
-  stages {
-    stage('Cloning Git') {
-      steps {
-        git 'https://github.com/hnaung/devsecops-demo.git'
-      }
-    }
-    stage('Building image') {
-      steps{
-        script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+node {
+    
+	
+    def newApp
+    def registry = 'hnaung/node-app'
+    def registryCredential = 'dockerhub'
+	
+	stage('Git') {
+		git 'https://github.com/hnaung/devsecops-demo.git'
+	}
+	stage('Build') {
+		sh 'npm install'
+	}
+	stage('Test') {
+		sh 'npm test'
+	}
+	stage('Building image') {
+        docker.withRegistry( 'https://' + registry, registryCredential ) {
+		    def buildName = registry + ":$BUILD_NUMBER"
+			newApp = docker.build buildName
+			newApp.push()
         }
-      }
-    }
-    stage('Docker Push') {
-      steps {
-        withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-          sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-          sh "docker push "$registry:$BUILD_NUMBER"
+	}
+	stage('Registring image') {
+        docker.withRegistry( 'https://' + registry, registryCredential ) {
+    		newApp.push 'latest2'
         }
-      }
+	}
+    stage('Removing image') {
+        sh "docker rmi $registry:$BUILD_NUMBER"
+        sh "docker rmi $registry:latest"
     }
-    stage('Docker Remove Image') {
-      steps {
-        sh "docker rmi "$registry:$BUILD_NUMBER"
-      }
-    }
-post {
-    success {
-      slackSend(message: "Pipeline is successfully completed.")
-    }
-    failure {
-      slackSend(message: "Pipeline failed. Please check the logs.")
-    }
+    
 }
