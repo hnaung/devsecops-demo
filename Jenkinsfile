@@ -32,7 +32,6 @@ pipeline {
 
     stage('Analyze with Anchore plugin') {
       steps {
-      container('anchore-cli') {
         def imageLine = 'openjdk:8-jre-alpine'
         writeFile file: 'anchore_images', text: imageLine
         anchore name: 'anchore_images'
