@@ -1,6 +1,6 @@
 @Library('shared-library-demo@master') _
 allInOne {
 	imageName: "hnaung/node-app"
-	imageVersion: "v-0.1"
+	imageVersion: "41"
 	existing: true
 }
