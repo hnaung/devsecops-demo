@@ -31,7 +31,7 @@ pipeline {
     }
     stage('Scan') {
       steps{
-        aquaMicroscanner imageName: 'hnaung/node-app:16', notCompliesCmd: 'echo "The Aqua has failed', onDisallowed: 'fail', outputFormat: 'html'
+        aquaMicroscanner imageName: 'hnaung/node-app:17', notCompliesCmd: 'echo "The Aqua has failed"', onDisallowed: 'fail', outputFormat: 'html'
         }
       }
 //    stage('Analyze with Anchore plugin') {
