@@ -1,4 +1,4 @@
-@Library('shared-library-demo') _
+@Library('shared-library-demo@master') _
 dockerBuild {
     yourteam = "hnaung"
     imagename = "nodeapp"
