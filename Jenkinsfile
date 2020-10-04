@@ -29,14 +29,19 @@ pipeline {
         }
       }
     }
-
-    stage('Analyze with Anchore plugin') {
-      steps {
-        def imageLine = 'openjdk:8-jre-alpine'
-        writeFile file: 'anchore_images', text: imageLine
-        anchore name: 'anchore_images'
+    stage('Scan') {
+      steps{
+        aquaMicroscanner imageName: 'hnaung/node-app:$BUILD_NUMBER', notCompliesCmd: 'exit 4', onDisallowed: 'fail', outputFormat: 'html'
+        }
       }
     }
+//    stage('Analyze with Anchore plugin') {
+//      steps {
+//        def imageLine = 'openjdk:8-jre-alpine'
+//        writeFile file: 'anchore_images', text: imageLine
+//        anchore name: 'anchore_images'
+//      }
+//    }
 
     stage('Publish Image') {
       steps{
