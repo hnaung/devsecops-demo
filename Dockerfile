@@ -1,6 +1,7 @@
-FROM node:lts-alpine3.9
+FROM node
+#FROM node:lts-alpine3.9
 
-#RUN apt-get update && apt-get upgrade -y && apt-get clean
+RUN apt-get update && apt-get upgrade -y && apt-get clean
 
 RUN mkdir /app
 WORKDIR /app
