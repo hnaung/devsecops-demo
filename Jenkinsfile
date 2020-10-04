@@ -1,6 +1,8 @@
 @Library('shared-library-demo@master') _
-allInOne {
-	imageName: "hnaung/node-app"
-	imageVersion: "41"
-	existing: true
+dockerBuild {
+    projectName = "Project1"
+    serverDomain = "Project1 Server Domain"
+    yourTeam = "hnaung"
+    imageName = "hnaung/node-app"
+    ImangeTag = "test-v1"
 }
