@@ -2,7 +2,7 @@
 dockerBuild {
     projectName = "Project1"
     serverDomain = "Project1 Server Domain"
-    yourteam = "hnaung"
-    imagename = "nodeapp"
+    yourTeam = "hnaung"
+    imageName = "node-app"
     ImangeTag = "test-v1"
 }
