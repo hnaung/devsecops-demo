@@ -3,6 +3,6 @@ dockerBuild {
     projectName = "Project1"
     serverDomain = "Project1 Server Domain"
     yourTeam = "hnaung"
-    imageName = "node-app"
+    imageName = "hnaung/node-app"
     ImangeTag = "test-v1"
 }
